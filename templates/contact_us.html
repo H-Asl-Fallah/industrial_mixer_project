@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}تماس با ما{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900">با ما در تماس باشید</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                تیم ما آماده پاسخگویی به سوالات و دریافت نظرات شماست.
+            </p>
+        </div>
+        <div class="mt-12 bg-white p-8 rounded-lg shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">ارسال پیام</h2>
+                    <form action="#" method="POST" class="space-y-6">
+                        {% csrf_token %}
+                        <div>
+                            <label for="name" class="sr-only">نام شما</label>
+                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md" placeholder="نام شما">
+                        </div>
+                        <div>
+                            <label for="email" class="sr-only">ایمیل</label>
+                            <input id="email" name="email" type="email" autocomplete="email" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md" placeholder="ایمیل">
+                        </div>
+                        <div>
+                            <label for="message" class="sr-only">پیام شما</label>
+                            <textarea id="message" name="message" rows="4" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border border-gray-300 rounded-md" placeholder="پیام شما"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Contact Info -->
+                <div class="space-y-6">
+                     <h2 class="text-2xl font-bold text-gray-800 mb-6">اطلاعات تماس</h2>
+                     <div class="flex items-start">
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">آدرس</h3>
+                            <p class="mt-1 text-gray-600">تهران، شهرک صنعتی، خیابان نوآوری، پلاک ۱۱۰</p>
+                        </div>
+                    </div>
+                     <div class="flex items-start">
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">تلفن</h3>
+                            <p class="mt-1 text-gray-600">۰۲۱-۱۲۳۴۵۶۷۸</p>
+                        </div>
+                    </div>
+                     <div class="flex items-start">
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">ایمیل</h3>
+                            <p class="mt-1 text-gray-600">info@mixerco.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

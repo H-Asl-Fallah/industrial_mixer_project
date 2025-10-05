@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}سبد خرید شما{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8">سبد خرید شما</h1>
+        
+        {% if cart %}
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Items Table -->
+            <div class="lg:w-2/3">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">محصول</th>
+                                    <th scope="col" class="px-6 py-3 text-center">تعداد</th>
+                                    <th scope="col" class="px-6 py-3">قیمت واحد</th>
+                                    <th scope="col" class="px-6 py-3">مجموع</th>
+                                    <th scope="col" class="px-6 py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart %}
+                                    {% with product=item.product %}
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center">
+                                            <a href="{{ product.get_absolute_url }}">
+                                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="w-16 h-16 object-cover rounded-md ml-4 shadow-sm">
+                                            </a>
+                                            <a href="{{ product.get_absolute_url }}" class="hover:text-blue-600 font-semibold">{{ product.name }}</a>
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="flex items-center justify-center">
+                                                {{ item.update_quantity_form.quantity }}
+                                                {{ item.update_quantity_form.override }}
+                                                <button type="submit" class="text-blue-600 hover:text-blue-800 font-semibold mr-2 text-xs">بروزرسانی</button>
+                                                {% csrf_token %}
+                                            </form>
+                                        </td>
+                                        <td class="px-6 py-4 font-semibold">{{ item.price|floatformat:"-2" }} تومان</td>
+                                        <td class="px-6 py-4 font-semibold">{{ item.total_price|floatformat:"-2" }} تومان</td>
+                                        <td class="px-6 py-4">
+                                            <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                                <button type="submit" class="font-medium text-red-600 hover:text-red-800">حذف</button>
+                                                {% csrf_token %}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endwith %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-4">جمع کل سبد خرید</h2>
+                    <div class="flex justify-between items-center text-gray-700 mb-6">
+                        <span class="font-semibold">مبلغ کل</span>
+                        <span class="font-bold text-lg text-blue-700">{{ cart.get_total_price|floatformat:"-2" }} تومان</span>
+                    </div>
+                    <a href="#" class="w-full text-center block bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105">
+                        ادامه فرآیند خرید
+                    </a>
+                    <div class="text-center mt-4">
+                         <a href="{% url 'shop:product_list' %}" class="text-blue-600 hover:text-blue-800 font-semibold">
+                            یا ادامه خرید
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center bg-white p-12 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800">سبد خرید شما خالی است.</h2>
+            <p class="mt-4 text-gray-600">از صفحه محصولات، کالاهای مورد نظر خود را به سبد خرید اضافه کنید.</p>
+            <a href="{% url 'shop:product_list' %}" class="mt-6 inline-block bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                بازگشت به فروشگاه
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

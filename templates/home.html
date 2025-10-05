@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}خانه - شرکت میکسر صنعتی{% endblock %}
+
+{% block content %}
+
+<!-- 1. Hero Section -->
+<div class="relative bg-gray-900">
+    <div class="absolute inset-0">
+        <img class="w-full h-full object-cover" src="{% static 'images/hero_background.jpg' %}" alt="Industrial Mixer" />
+        <div class="absolute inset-0 bg-gray-900 opacity-60"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">کیفیت و نوآوری در صنعت میکس</h1>
+        <p class="mt-6 max-w-lg mx-auto text-xl text-indigo-100 sm:max-w-3xl">
+            با تجهیزات پیشرفته ما، فرآیندهای تولید خود را به سطح بالاتری از بهره‌وری و دقت برسانید.
+        </p>
+        <div class="mt-10">
+            <a href="{% url 'shop:product_list' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transform hover:scale-105 transition-transform duration-300">
+                مشاهده محصولات
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Featured Products Section -->
+{% if latest_products %}
+<div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900">محصولات ویژه ما</h2>
+            <p class="mt-4 text-lg text-gray-500">نگاهی به جدیدترین و پرفروش‌ترین میکسرهای ما بیندازید.</p>
+        </div>
+        <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {% for product in latest_products %}
+            <div class="group relative bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <a href="{% url 'shop:product_detail' product.slug %}">
+                    <div class="w-full h-56 bg-gray-200 overflow-hidden">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}https://placehold.co/400x300/e2e8f0/333?text=No+Image{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:opacity-75 transition-opacity duration-300">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
+                        <p class="mt-2 text-xl font-bold text-blue-600">{{ product.price|floatformat:"-2" }} تومان</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- 3. Why Choose Us Section -->
+<div class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold text-gray-900">چرا ProSina را انتخاب کنید؟</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800">کیفیت ساخت بی‌نظیر</h3>
+                <p class="mt-4 text-gray-600">استفاده از بهترین مواد اولیه و استانداردهای دقیق تولید برای تضمین دوام و عملکرد فوق‌العاده.</p>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800">پشتیبانی تخصصی</h3>
+                <p class="mt-4 text-gray-600">تیم متخصص ما آماده ارائه مشاوره فنی و خدمات پس از فروش در تمام مراحل است.</p>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800">راهکارهای سفارشی</h3>
+                <p class="mt-4 text-gray-600">توانایی طراحی و ساخت میکسرهای اختصاصی مطابق با نیازهای منحصر به فرد صنعت شما.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Testimonials Section -->
+<div class="bg-blue-700 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold">صدای مشتریان ما</h2>
+            <div class="mt-8 flow-root">
+                <div class="relative">
+                    <blockquote class="text-xl italic">
+                        <p>"کیفیت و کارایی میکسرهای MixerCo فراتر از انتظار ما بود. تیم پشتیبانی آن‌ها نیز فوق‌العاده است."</p>
+                    </blockquote>
+                    <cite class="mt-4 block font-semibold not-italic">- شرکت صنایع شیمیایی پیشرو</cite>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 5. Latest Articles Section -->
+{% if latest_articles %}
+<div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900">از وبلاگ ما بخوانید</h2>
+            <p class="mt-4 text-lg text-gray-500">آخرین مقالات و تحلیل‌های تخصصی در صنعت میکس.</p>
+        </div>
+        <div class="mt-12 max-w-lg mx-auto grid gap-8 lg:grid-cols-3 lg:max-w-none">
+            {% for article in latest_articles %}
+            <div class="flex flex-col rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+                <a href="{% url 'blog:article_detail' article.slug %}">
+                    <div class="flex-shrink-0 h-48 bg-gray-200">
+                        <img class="h-full w-full object-cover" src="{% if article.image %}{{ article.image.url }}{% else %}https://placehold.co/400x200/e2e8f0/333?text=No+Image{% endif %}" alt="{{ article.title }}">
+                    </div>
+                    <div class="flex-1 bg-white p-6 flex flex-col justify-between">
+                        <div class="flex-1">
+                            <p class="text-xl font-semibold text-gray-900">{{ article.title }}</p>
+                            <p class="mt-3 text-base text-gray-500">{{ article.body|truncatewords:20 }}</p>
+                        </div>
+                        <div class="mt-6 flex items-center">
+                            <p class="text-sm font-medium text-gray-500">{{ article.publish|date:"j F Y" }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+

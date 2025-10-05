@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}شرکت میکسر صنعتی{% endblock %}</title>
+    <!-- اتصال به Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- فونت وزیرمتن -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        /* استایل برای لینک فعال در منو */
+        .nav-link-active {
+            background-color: #DBEAFE; /* blue-100 */
+            color: #2563EB; /* blue-600 */
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-white flex flex-col min-h-screen">
+
+    <!-- Header and Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- لوگو -->
+                <div class="flex-shrink-0">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-600">
+                       <span class="inline-block transform -rotate-12 bg-blue-600 text-white rounded-md p-1">Sina</span> Pro
+                    </a>
+                </div>
+
+                <!-- منوی اصلی دسکتاپ -->
+                <div class="hidden md:flex items-center">
+                    <div class="ml-10 flex items-baseline space-x-4 space-x-reverse">
+                        <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">صفحه اصلی</a>
+                        <a href="{% url 'shop:product_list' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">محصولات</a>
+                        <a href="{% url 'blog:article_list' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">مقالات</a>
+                        <a href="{% url 'ai_assistant:chat' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">دستیار هوشمند</a>
+                        <a href="{% url 'pages:about_us' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">درباره ما</a>
+                        <a href="{% url 'pages:contact_us' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">تماس با ما</a>
+                    </div>
+                </div>
+
+                <!-- دکمه‌های ورود/خروج و سبد خرید -->
+                <div class="hidden md:flex items-center">
+                    <div class="flex items-center space-x-5 space-x-reverse">
+                        {% if user.is_authenticated %}
+                            <span class="text-gray-600 font-medium">سلام، {{ user.username }}!</span>
+                            <a href="{% url 'accounts:logout' %}" class="flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 transition-all duration-300 transform hover:scale-105 shadow-sm">
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                خروج
+                            </a>
+                        {% else %}
+                            <a href="{% url 'accounts:login' %}" class="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-sm">
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                ورود / ثبت‌نام
+                            </a>
+                        {% endif %}
+                        
+                        <div class="h-6 w-px bg-gray-200"></div>
+
+                        <a href="{% url 'cart:cart_detail' %}" class="relative p-2 text-gray-600 hover:text-blue-600 rounded-full hover:bg-gray-100 transition-colors">
+                            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            {% if cart|length > 0 %}
+                            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{{ cart|length }}</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- دکمه منوی موبایل -->
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-button" type="button" class="bg-gray-100 inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-200 focus:outline-none">
+                        <svg class="block h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        <svg class="hidden h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- منوی موبایل -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">صفحه اصلی</a>
+                <a href="{% url 'shop:product_list' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">محصولات</a>
+                <a href="{% url 'blog:article_list' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">مقالات</a>
+                <a href="{% url 'ai_assistant:chat' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">دستیار هوشمند</a>
+                <a href="{% url 'pages:about_us' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">درباره ما</a>
+                <a href="{% url 'pages:contact_us' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">تماس با ما</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                {% if user.is_authenticated %}
+                    <div class="flex items-center px-5">
+                        <div class="ml-3">
+                            <div class="text-base font-medium text-gray-800">{{ user.username }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 px-2 space-y-1">
+                        <a href="{% url 'accounts:logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">خروج</a>
+                    </div>
+                {% else %}
+                    <div class="px-2 space-y-1">
+                        <a href="{% url 'accounts:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">ورود / ثبت‌نام</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوای اصلی صفحه -->
+    <main class="flex-grow">
+        
+        <!-- بخش نمایش پیغام‌ها -->
+        {% if messages %}
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            {% for message in messages %}
+                <div class="p-4 rounded-md text-sm font-medium {% if message.tags == 'success' %}bg-green-100 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-100 border border-red-200 text-red-800{% else %}bg-blue-100 border border-blue-200 text-blue-800{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold">درباره ما</h3>
+                    <p class="mt-4 text-gray-400 text-sm">ما پیشرو در تولید میکسرهای صنعتی با کیفیت و دوام بالا برای صنایع مختلف هستیم.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold">لینک‌های سریع</h3>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a href="{% url 'shop:product_list' %}" class="text-gray-400 hover:text-white">محصولات</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">پشتیبانی</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold">تماس با ما</h3>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-400">
+                        <li>ایمیل: info@mixerco.com</li>
+                        <li>تلفن: ۰۲۱-۱۲۳۴۵۶۷۸</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold">ما را دنبال کنید</h3>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; {% now "Y" %} تمامی حقوق برای شرکت میکسر صنعتی محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const openIcon = mobileMenuButton.querySelector('svg.block');
+        const closeIcon = mobileMenuButton.querySelector('svg.hidden');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            openIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        // Active navigation link highlighter
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                const linkPath = link.pathname;
+                
+                // Exact match for home page
+                if (currentPath === '/' && linkPath === '/') {
+                    link.classList.add('nav-link-active');
+                } 
+                // For other pages, check if the current path starts with the link's path
+                else if (linkPath !== '/' && currentPath.startsWith(linkPath)) {
+                    link.classList.add('nav-link-active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

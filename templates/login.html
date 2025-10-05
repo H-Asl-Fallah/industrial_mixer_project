@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}ورود به حساب کاربری{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div class="container mx-auto p-4">
+        <div class="flex flex-col lg:flex-row w-full lg:w-10/12 xl:w-8/12 bg-white rounded-xl mx-auto shadow-2xl overflow-hidden">
+            
+            <!-- Form Section -->
+            <div class="w-full lg:w-1/2 py-12 px-8 sm:px-12">
+                <div>
+                    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                        خوش آمدید!
+                    </h2>
+                    <p class="mt-2 text-center text-sm text-gray-600">
+                        حساب کاربری ندارید؟
+                        <a href="{% url 'accounts:register' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                            ثبت‌نام کنید
+                        </a>
+                    </p>
+                </div>
+                
+                {% if form.errors %}
+                    <div class="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">خطا!</strong>
+                        <span class="block sm:inline">نام کاربری یا رمز عبور شما اشتباه است.</span>
+                    </div>
+                {% endif %}
+
+                <form class="mt-8 space-y-6" action="{% url 'accounts:login' %}" method="post">
+                    {% csrf_token %}
+                    <div class="rounded-md shadow-sm space-y-4">
+                        <div>
+                            <label for="id_username" class="sr-only">نام کاربری</label>
+                            <input id="id_username" name="username" type="text" autocomplete="username" required class="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition" placeholder="نام کاربری">
+                        </div>
+                        <div>
+                            <label for="id_password" class="sr-only">رمز عبور</label>
+                            <input id="id_password" name="password" type="password" autocomplete="current-password" required class="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition" placeholder="رمز عبور">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember-me" class="mr-2 block text-sm text-gray-900">
+                                مرا به خاطر بسپار
+                            </label>
+                        </div>
+
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                                رمز عبور خود را فراموش کرده‌اید؟
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                            ورود
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Image Section -->
+            <div class="hidden lg:flex w-1/2 items-center justify-center bg-blue-600 p-12 text-white relative">
+                <div class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1556742044-597b16a3a48c?auto=format&fit=crop" 
+                         alt="Industrial Machinery" class="w-full h-full object-cover opacity-20">
+                </div>
+                <div class="relative z-10 text-center">
+                    <h1 class="text-4xl font-bold">کیفیت و نوآوری</h1>
+                    <p class="mt-4 text-lg opacity-90">به پنل کاربری شرکت میکسر صنعتی خوش آمدید. ما متعهد به ارائه بهترین راهکارها برای صنعت شما هستیم.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+

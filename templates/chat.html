@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}دستیار هوشمند{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 flex-grow py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col" style="height: 80vh;">
+            
+            <!-- Header -->
+            <div class="p-5 border-b bg-gray-50 flex items-center space-x-4 space-x-reverse">
+                <div class="relative">
+                    <span class="absolute right-0 bottom-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white"></span>
+                    <svg class="h-12 w-12 text-white bg-blue-600 p-2 rounded-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">دستیار هوشمند ProSina</h1>
+                    <p class="text-sm text-gray-500 mt-1">پاسخگویی با سرور محلی به شما</p>
+                </div>
+            </div>
+
+            <!-- Chat messages area -->
+            <div class="p-6 flex-grow overflow-y-auto" id="chat-box">
+                <!-- Initial AI Message -->
+                <div class="flex items-end justify-start mb-4 animate-fade-in-up">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">AI</div>
+                    <div class="mr-3 bg-blue-500 text-white rounded-lg p-3 max-w-md shadow">
+                        <p>سلام! من دستیار هوشمند شما هستم و از طریق سرور محلی  به شما پاسخ می‌دهم. چه سوالی دارید؟</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div id="typing-indicator" class="px-6 pb-2 hidden">
+                <div class="flex items-end justify-start mb-4">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">AI</div>
+                    <div class="mr-3 bg-gray-200 text-gray-600 rounded-lg p-3 max-w-md shadow">
+                        <div class="flex items-center justify-center space-x-1 space-x-reverse">
+                            <span class="h-2 w-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                            <span class="h-2 w-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                            <span class="h-2 w-2 bg-gray-400 rounded-full animate-bounce"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input area -->
+            <div class="p-4 bg-white border-t">
+                <div class="flex items-center">
+                    <input type="text" id="user-input" placeholder="پیام خود را تایپ کنید..." class="flex-grow p-3 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    <button id="send-btn" class="bg-blue-600 text-white font-bold p-3 rounded-r-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                        <svg class="w-6 h-6 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fade-in-up 0.5s ease-out forwards;
+    }
+</style>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const getResponseUrl = "{% url 'ai_assistant:get_ai_response' %}";
+
+    function addUserMessage(message) {
+        const messageElement = `
+            <div class="flex items-end justify-end mb-4 animate-fade-in-up">
+                <div class="ml-3 bg-gray-200 text-gray-800 rounded-lg p-3 max-w-md shadow">
+                    <p>${message}</p>
+                </div>
+                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center text-sm font-bold">شما</div>
+            </div>
+        `;
+        chatBox.innerHTML += messageElement;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addAiMessage(message) {
+        // Replace markdown-like bold syntax with HTML bold tags
+        message = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        const messageElement = `
+            <div class="flex items-end justify-start mb-4 animate-fade-in-up">
+                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">AI</div>
+                <div class="mr-3 bg-blue-500 text-white rounded-lg p-3 max-w-md shadow">
+                    <p>${message.replace(/\n/g, '<br>')}</p>
+                </div>
+            </div>
+        `;
+        chatBox.innerHTML += messageElement;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function getAiResponse(userMessage) {
+        typingIndicator.classList.remove('hidden');
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        try {
+            const response = await fetch(getResponseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await response.json();
+            
+            typingIndicator.classList.add('hidden');
+
+            if (data.response) {
+                addAiMessage(data.response);
+            } else {
+                addAiMessage("متاسفانه در حال حاضر قادر به پاسخگویی نیستم. لطفاً بعداً تلاش کنید. جزئیات خطا: " + (data.error || 'Unknown error'));
+                console.error('Error from server:', data.error);
+            }
+        } catch (error) {
+            typingIndicator.classList.add('hidden');
+            addAiMessage("خطایی در ارتباط با سرور رخ داد. لطفاً مطمئن شوید سرور جنگو و LM Studio در حال اجرا هستند.");
+            console.error('Fetch error:', error);
+        }
+    }
+
+    function handleSend() {
+        const message = userInput.value.trim();
+        if (message) {
+            addUserMessage(message);
+            userInput.value = '';
+            getAiResponse(message);
+        }
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    userInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            handleSend();
+        }
+    });
+
+</script>
+{% endblock %}
+
