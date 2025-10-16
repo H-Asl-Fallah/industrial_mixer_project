@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load l10n %}
 
 {% block title %}محصولات ما{% endblock %}
 
@@ -47,7 +46,12 @@
                             </div>
                             <div class="p-4">
                                 <h3 class="text-lg font-semibold text-gray-800 truncate">{{ product.name }}</h3>
-                                <p class="mt-2 text-xl font-bold text-blue-600">{{ product.price|floatformat:"-2" }} تومان</p>
+                                <!-- Conditional price display -->
+                                {% if product.contact_for_price %}
+                                    <p class="mt-2 text-lg font-bold text-red-600">برای قیمت تماس بگیرید</p>
+                                {% else %}
+                                    <p class="mt-2 text-xl font-bold text-blue-600">{{ product.price|floatformat:"0" }} تومان</p>
+                                {% endif %}
                             </div>
                         </a>
                     </div>
@@ -61,4 +65,3 @@
     </div>
 </div>
 {% endblock %}
-

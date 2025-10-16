@@ -1,22 +1,35 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_language_info for LANGUAGE_CODE as lang %}
+
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="{{ LANGUAGE_CODE }}" dir="{{ lang.bidi|yesno:'rtl,ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}شرکت میکسر صنعتی{% endblock %}</title>
-    <!-- اتصال به Tailwind CSS -->
+    <title>{% block title %}{% trans "شرکت میکسر صنعتی" %}{% endblock %}</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- فونت وزیرمتن -->
+    <!-- Vazirmatn Font -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
         }
-        /* استایل برای لینک فعال در منو */
         .nav-link-active {
             background-color: #DBEAFE; /* blue-100 */
             color: #2563EB; /* blue-600 */
             font-weight: 700;
+        }
+        /* Animation for messages */
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-fade-in-right {
+            animation: fadeInRight 0.5s ease-out forwards;
         }
     </style>
 </head>
@@ -26,45 +39,66 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- لوگو -->
+                <!-- Logo -->
                 <div class="flex-shrink-0">
                     <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-600">
                        <span class="inline-block transform -rotate-12 bg-blue-600 text-white rounded-md p-1">Sina</span> Pro
                     </a>
                 </div>
 
-                <!-- منوی اصلی دسکتاپ -->
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center">
                     <div class="ml-10 flex items-baseline space-x-4 space-x-reverse">
-                        <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">صفحه اصلی</a>
-                        <a href="{% url 'shop:product_list' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">محصولات</a>
-                        <a href="{% url 'blog:article_list' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">مقالات</a>
-                        <a href="{% url 'ai_assistant:chat' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">دستیار هوشمند</a>
-                        <a href="{% url 'pages:about_us' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">درباره ما</a>
-                        <a href="{% url 'pages:contact_us' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">تماس با ما</a>
+                        <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">{% trans "صفحه اصلی" %}</a>
+                        <a href="{% url 'shop:product_list' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">{% trans "محصولات" %}</a>
+                        <a href="{% url 'blog:article_list' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">{% trans "مقالات" %}</a>
+                        <a href="{% url 'ai_assistant:chat' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">{% trans "دستیار هوشمند" %}</a>
+                        <a href="{% url 'pages:about_us' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">{% trans "درباره ما" %}</a>
+                        <a href="{% url 'pages:contact_us' %}" class="nav-link text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-md text-md font-medium transition-colors">{% trans "تماس با ما" %}</a>
                     </div>
                 </div>
 
-                <!-- دکمه‌های ورود/خروج و سبد خرید -->
+                <!-- Buttons & Language Switcher -->
                 <div class="hidden md:flex items-center">
-                    <div class="flex items-center space-x-5 space-x-reverse">
-                        {% if user.is_authenticated %}
-                            <span class="text-gray-600 font-medium">سلام، {{ user.username }}!</span>
-                            <a href="{% url 'accounts:logout' %}" class="flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 transition-all duration-300 transform hover:scale-105 shadow-sm">
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                                خروج
-                            </a>
-                        {% else %}
-                            <a href="{% url 'accounts:login' %}" class="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-sm">
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                                ورود / ثبت‌نام
-                            </a>
-                        {% endif %}
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        
+                        <!-- Language Switcher -->
+                        <form action="{% url 'set_language' %}" method="post" class="flex items-center">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}">
+                            <select name="language" onchange="this.form.submit()" class="bg-gray-100 border-gray-300 rounded-md text-sm py-2 px-1">
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang_code, lang_name in LANGUAGES %}
+                                    <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+                                        {{ lang_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
                         
                         <div class="h-6 w-px bg-gray-200"></div>
 
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'profiles:profile' %}" class="text-gray-600 font-medium hover:text-blue-600 transition">{% trans "سلام" %}, {{ user.username }}!</a>
+                            <a href="{% url 'accounts:logout' %}" class="flex items-center px-3 py-2 bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 transition">{% trans "خروج" %}</a>
+                        {% else %}
+                            <a href="{% url 'accounts:login' %}" class="flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition">{% trans "ورود / ثبت‌نام" %}</a>
+                        {% endif %}
+                        
+                        <!-- Icons -->
+                        {% if user.is_staff %}
+                        <a href="{% url 'admin:pages_contactmessage_changelist' %}" class="relative p-2 text-gray-600 hover:text-blue-600 rounded-full hover:bg-gray-100 transition-colors" title="{% trans 'پیام‌های خوانده نشده' %}">
+                            <svg class="h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg>
+                            {% if unread_messages_count > 0 %}
+                                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{{ unread_messages_count }}</span>
+                            {% endif %}
+                        </a>
+                        {% endif %}
+                        
                         <a href="{% url 'cart:cart_detail' %}" class="relative p-2 text-gray-600 hover:text-blue-600 rounded-full hover:bg-gray-100 transition-colors">
-                            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                           <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                             {% if cart|length > 0 %}
                             <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{{ cart|length }}</span>
                             {% endif %}
@@ -72,7 +106,7 @@
                     </div>
                 </div>
 
-                <!-- دکمه منوی موبایل -->
+                <!-- Mobile Menu Button -->
                 <div class="-mr-2 flex md:hidden">
                     <button id="mobile-menu-button" type="button" class="bg-gray-100 inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-800 hover:bg-gray-200 focus:outline-none">
                         <svg class="block h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
@@ -81,16 +115,16 @@
                 </div>
             </div>
         </nav>
-
-        <!-- منوی موبایل -->
+        
+        <!-- Mobile Menu -->
         <div class="md:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">صفحه اصلی</a>
-                <a href="{% url 'shop:product_list' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">محصولات</a>
-                <a href="{% url 'blog:article_list' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">مقالات</a>
-                <a href="{% url 'ai_assistant:chat' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">دستیار هوشمند</a>
-                <a href="{% url 'pages:about_us' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">درباره ما</a>
-                <a href="{% url 'pages:contact_us' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">تماس با ما</a>
+                <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">{% trans "صفحه اصلی" %}</a>
+                <a href="{% url 'shop:product_list' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">{% trans "محصولات" %}</a>
+                <a href="{% url 'blog:article_list' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">{% trans "مقالات" %}</a>
+                <a href="{% url 'ai_assistant:chat' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">{% trans "دستیار هوشمند" %}</a>
+                <a href="{% url 'pages:about_us' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">{% trans "درباره ما" %}</a>
+                <a href="{% url 'pages:contact_us' %}" class="nav-link text-gray-700 hover:bg-gray-200 block px-3 py-2 rounded-md text-base font-medium">{% trans "تماس با ما" %}</a>
             </div>
             <div class="pt-4 pb-3 border-t border-gray-200">
                 {% if user.is_authenticated %}
@@ -100,33 +134,33 @@
                         </div>
                     </div>
                     <div class="mt-3 px-2 space-y-1">
-                        <a href="{% url 'accounts:logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">خروج</a>
+                        <a href="{% url 'profiles:profile' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">{% trans "پروفایل من" %}</a>
+                        <a href="{% url 'accounts:logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">{% trans "خروج" %}</a>
                     </div>
                 {% else %}
                     <div class="px-2 space-y-1">
-                        <a href="{% url 'accounts:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">ورود / ثبت‌نام</a>
+                        <a href="{% url 'accounts:login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">{% trans "ورود / ثبت‌نام" %}</a>
                     </div>
                 {% endif %}
             </div>
         </div>
     </header>
 
-    <!-- محتوای اصلی صفحه -->
+    <!-- Main Content -->
     <main class="flex-grow">
-        
-        <!-- بخش نمایش پیغام‌ها -->
-        {% if messages %}
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-            {% for message in messages %}
-                <div class="p-4 rounded-md text-sm font-medium {% if message.tags == 'success' %}bg-green-100 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-100 border border-red-200 text-red-800{% else %}bg-blue-100 border border-blue-200 text-blue-800{% endif %}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
+        <!-- Message Container -->
+        <div id="message-container" class="fixed top-24 right-4 z-[100] w-full max-w-sm space-y-3">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message-item p-4 rounded-lg shadow-lg text-sm font-medium flex items-center justify-between animate-fade-in-right {% if message.tags == 'success' %}bg-green-100 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-100 border border-red-200 text-red-800{% else %}bg-blue-100 border border-blue-200 text-blue-800{% endif %}" role="alert">
+                        <span>{{ message }}</span>
+                        <button type="button" onclick="this.parentElement.style.display='none';" class="mr-2 text-xl font-bold leading-none">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
-        {% endif %}
-
-        {% block content %}
-        {% endblock %}
+        
+        {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
@@ -134,34 +168,43 @@
         <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 class="text-lg font-semibold">درباره ما</h3>
-                    <p class="mt-4 text-gray-400 text-sm">ما پیشرو در تولید میکسرهای صنعتی با کیفیت و دوام بالا برای صنایع مختلف هستیم.</p>
+                    <h3 class="text-lg font-semibold">{% trans "درباره ما" %}</h3>
+                    <p class="mt-4 text-gray-400 text-sm">{% trans "ما پیشرو در تولید میکسرهای صنعتی با کیفیت و دوام بالا برای صنایع مختلف هستیم." %}</p>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold">لینک‌های سریع</h3>
+                    <h3 class="text-lg font-semibold">{% trans "لینک‌های سریع" %}</h3>
                     <ul class="mt-4 space-y-2 text-sm">
-                        <li><a href="{% url 'shop:product_list' %}" class="text-gray-400 hover:text-white">محصولات</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">پشتیبانی</a></li>
+                        <li><a href="{% url 'shop:product_list' %}" class="text-gray-400 hover:text-white">{% trans "محصولات" %}</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">{% trans "پشتیبانی" %}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold">تماس با ما</h3>
+                    <h3 class="text-lg font-semibold">{% trans "تماس با ما" %}</h3>
                     <ul class="mt-4 space-y-2 text-sm text-gray-400">
-                        <li>ایمیل: info@mixerco.com</li>
-                        <li>تلفن: ۰۲۱-۱۲۳۴۵۶۷۸</li>
+                        <li>{% trans "ایمیل" %}: info@mixerco.com</li>
+                        <li>{% trans "تلفن" %}: ۰۲۱-۱۲۳۴۵۶۷۸</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold">ما را دنبال کنید</h3>
+                    <h3 class="text-lg font-semibold">{% trans "ما را دنبال کنید" %}</h3>
+                    <!-- Social media icons can be added here -->
                 </div>
             </div>
             <div class="mt-8 border-t border-gray-700 pt-8 text-center text-sm text-gray-400">
-                <p>&copy; {% now "Y" %} تمامی حقوق برای شرکت میکسر صنعتی محفوظ است.</p>
+                <p>&copy; {% now "Y" %} {% trans "تمامی حقوق برای شرکت میکسر صنعتی محفوظ است." %}</p>
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -176,22 +219,38 @@
 
         // Active navigation link highlighter
         document.addEventListener('DOMContentLoaded', function() {
-            const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
+            try {
+                // Remove the language prefix for comparison
+                const currentPath = window.location.pathname.replace(/^\/(en|ar|fa)/, '');
+                const navLinks = document.querySelectorAll('.nav-link');
 
-            navLinks.forEach(link => {
-                const linkPath = link.pathname;
-                
-                // Exact match for home page
-                if (currentPath === '/' && linkPath === '/') {
-                    link.classList.add('nav-link-active');
-                } 
-                // For other pages, check if the current path starts with the link's path
-                else if (linkPath !== '/' && currentPath.startsWith(linkPath)) {
-                    link.classList.add('nav-link-active');
-                }
+                navLinks.forEach(link => {
+                    // Use link.pathname directly which is more robust
+                    const linkPath = link.pathname.replace(/^\/(en|ar|fa)/, '');
+                    
+                    if (currentPath === '/' && linkPath === '/') {
+                        link.classList.add('nav-link-active');
+                    } else if (linkPath !== '/' && currentPath.startsWith(linkPath)) {
+                        link.classList.add('nav-link-active');
+                    }
+                });
+            } catch (e) {
+                console.error("Error highlighting active link:", e);
+            }
+        });
+
+        // Auto-dismiss messages
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageItems = document.querySelectorAll('.message-item');
+            messageItems.forEach(message => {
+                setTimeout(() => {
+                    message.style.transition = 'opacity 0.5s ease';
+                    message.style.opacity = '0';
+                    setTimeout(() => message.remove(), 500);
+                }, 3000); // Disappears after 3 seconds
             });
         });
+
     </script>
 </body>
 </html>

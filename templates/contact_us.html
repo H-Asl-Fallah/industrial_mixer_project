@@ -16,21 +16,12 @@
                 <!-- Contact Form -->
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">ارسال پیام</h2>
-                    <form action="#" method="POST" class="space-y-6">
+                    <form action="{% url 'pages:contact_us' %}" method="post" novalidate>
                         {% csrf_token %}
-                        <div>
-                            <label for="name" class="sr-only">نام شما</label>
-                            <input type="text" name="name" id="name" autocomplete="name" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md" placeholder="نام شما">
+                        <div class="space-y-6">
+                            {{ form.as_p }}
                         </div>
-                        <div>
-                            <label for="email" class="sr-only">ایمیل</label>
-                            <input id="email" name="email" type="email" autocomplete="email" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md" placeholder="ایمیل">
-                        </div>
-                        <div>
-                            <label for="message" class="sr-only">پیام شما</label>
-                            <textarea id="message" name="message" rows="4" class="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border border-gray-300 rounded-md" placeholder="پیام شما"></textarea>
-                        </div>
-                        <div>
+                        <div class="mt-8">
                             <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 ارسال
                             </button>
@@ -63,4 +54,42 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* استایل سفارشی برای فرم داینامیک جنگو */
+    form p {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    form label {
+        display: none; /* مخفی کردن لیبل‌ها چون placeholder داریم */
+    }
+    form input, form textarea {
+        display: block;
+        width: 100%;
+        box-shadow: sm;
+        padding: 0.75rem 1rem; /* py-3 px-4 */
+        border-radius: 0.375rem; /* rounded-md */
+        border: 1px solid #D1D5DB; /* border-gray-300 */
+    }
+    form input::placeholder, form textarea::placeholder {
+        color: #6B7280; /* placeholder-gray-500 */
+    }
+    form input:focus, form textarea:focus {
+        outline: none;
+        --tw-ring-color: #3B82F6; /* focus:ring-blue-500 */
+        border-color: #3B82F6; /* focus:border-blue-500 */
+        box-shadow: 0 0 0 2px var(--tw-ring-color);
+    }
+    ul.errorlist {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 0.25rem;
+        color: #DC2626;
+        font-size: 0.875rem;
+    }
+</style>
 {% endblock %}
+

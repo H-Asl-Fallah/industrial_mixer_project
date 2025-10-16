@@ -2,47 +2,54 @@
 {% load static %}
 {% load l10n %}
 
-{% block title %}خانه - شرکت میکسر صنعتی{% endblock %}
+{% block title %}خانه - شرکت میکسر صنعتی ProSina{% endblock %}
 
 {% block content %}
 
-<!-- 1. Hero Section -->
 <div class="relative bg-gray-900">
     <div class="absolute inset-0">
         <img class="w-full h-full object-cover" src="{% static 'images/hero_background.jpg' %}" alt="Industrial Mixer" />
-        <div class="absolute inset-0 bg-gray-900 opacity-60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent"></div>
     </div>
-    <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">کیفیت و نوآوری در صنعت میکس</h1>
-        <p class="mt-6 max-w-lg mx-auto text-xl text-indigo-100 sm:max-w-3xl">
-            با تجهیزات پیشرفته ما، فرآیندهای تولید خود را به سطح بالاتری از بهره‌وری و دقت برسانید.
-        </p>
-        <div class="mt-10">
-            <a href="{% url 'shop:product_list' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transform hover:scale-105 transition-transform duration-300">
-                مشاهده محصولات
-            </a>
+    <div class="relative min-h-[85vh] flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+        <div>
+            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl animate-fade-in-down">کیفیت و نوآوری در صنعت میکس</h1>
+            <p class="mt-6 max-w-lg mx-auto text-xl text-indigo-100 sm:max-w-3xl animate-fade-in-up">
+                با تجهیزات پیشرفته ما، فرآیندهای تولید خود را به سطح بالاتری از بهره‌وری و دقت برسانید.
+            </p>
+            <div class="mt-10">
+                <a href="{% url 'shop:product_list' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transform hover:scale-105 transition-transform duration-300">
+                    مشاهده محصولات
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 2. Featured Products Section -->
 {% if latest_products %}
-<div class="bg-white py-16">
+<div class="bg-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
+        <div class="text-center" data-aos="fade-up">
             <h2 class="text-3xl font-extrabold text-gray-900">محصولات ویژه ما</h2>
-            <p class="mt-4 text-lg text-gray-500">نگاهی به جدیدترین و پرفروش‌ترین میکسرهای ما بیندازید.</p>
+            <p class="mt-4 text-lg text-gray-600">نگاهی به جدیدترین و پرفروش‌ترین میکسرهای ما بیندازید.</p>
         </div>
         <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {% for product in latest_products %}
-            <div class="group relative bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div class="group relative bg-white border rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
                 <a href="{% url 'shop:product_detail' product.slug %}">
                     <div class="w-full h-56 bg-gray-200 overflow-hidden">
-                        <img src="{% if product.image %}{{ product.image.url }}{% else %}https://placehold.co/400x300/e2e8f0/333?text=No+Image{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:opacity-75 transition-opacity duration-300">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}https://placehold.co/400x300/e2e8f0/333?text=No+Image{% endif %}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     </div>
-                    <div class="p-4">
+                    <div class="p-5">
                         <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
-                        <p class="mt-2 text-xl font-bold text-blue-600">{{ product.price|floatformat:"-2" }} تومان</p>
+                        
+                        <!-- Logic for conditional price display has been added here -->
+                        {% if product.contact_for_price %}
+                            <p class="mt-2 text-lg font-bold text-red-600">برای قیمت تماس بگیرید</p>
+                        {% else %}
+                            <p class="mt-2 text-xl font-bold text-blue-600">{{ product.price|floatformat:"0" }} تومان</p>
+                        {% endif %}
+                        
                     </div>
                 </a>
             </div>
@@ -52,22 +59,30 @@
 </div>
 {% endif %}
 
-<!-- 3. Why Choose Us Section -->
-<div class="bg-gray-50 py-16">
+<div class="bg-gray-50 py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-aos="fade-up">
             <h2 class="text-3xl font-extrabold text-gray-900">چرا ProSina را انتخاب کنید؟</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            <div class="p-6">
+            <div class="p-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-6">
+                    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </div>
                 <h3 class="text-xl font-bold text-gray-800">کیفیت ساخت بی‌نظیر</h3>
                 <p class="mt-4 text-gray-600">استفاده از بهترین مواد اولیه و استانداردهای دقیق تولید برای تضمین دوام و عملکرد فوق‌العاده.</p>
             </div>
-            <div class="p-6">
+            <div class="p-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-6">
+                     <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                </div>
                 <h3 class="text-xl font-bold text-gray-800">پشتیبانی تخصصی</h3>
                 <p class="mt-4 text-gray-600">تیم متخصص ما آماده ارائه مشاوره فنی و خدمات پس از فروش در تمام مراحل است.</p>
             </div>
-            <div class="p-6">
+            <div class="p-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-6">
+                    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m0-8a4 4 0 100-8 4 4 0 000 8zm0 0a4 4 0 100 8 4 4 0 000-8z" /></svg>
+                </div>
                 <h3 class="text-xl font-bold text-gray-800">راهکارهای سفارشی</h3>
                 <p class="mt-4 text-gray-600">توانایی طراحی و ساخت میکسرهای اختصاصی مطابق با نیازهای منحصر به فرد صنعت شما.</p>
             </div>
@@ -75,37 +90,34 @@
     </div>
 </div>
 
-<!-- 4. Testimonials Section -->
-<div class="bg-blue-700 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h2 class="text-3xl font-extrabold">صدای مشتریان ما</h2>
-            <div class="mt-8 flow-root">
-                <div class="relative">
-                    <blockquote class="text-xl italic">
-                        <p>"کیفیت و کارایی میکسرهای MixerCo فراتر از انتظار ما بود. تیم پشتیبانی آن‌ها نیز فوق‌العاده است."</p>
-                    </blockquote>
-                    <cite class="mt-4 block font-semibold not-italic">- شرکت صنایع شیمیایی پیشرو</cite>
-                </div>
-            </div>
+<div class="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 overflow-hidden">
+    <div class="absolute top-0 left-0 transform -translate-x-1/4 -translate-y-1/4 text-blue-800 opacity-10">
+        <svg width="404" height="404" fill="none" viewBox="0 0 404 404" role="img"><path d="M404 80.63v242.74C404 366.49 366.49 404 323.37 404H80.63C37.51 404 0 366.49 0 323.37V80.63C0 37.51 37.51 0 80.63 0h242.74C366.49 0 404 37.51 404 80.63z" fill="currentColor"/></svg>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+        <h2 class="text-3xl font-extrabold">صدای مشتریان ما</h2>
+        <div class="mt-8">
+            <blockquote class="text-2xl italic font-medium">
+                <p>"کیفیت و کارایی میکسرهای ProSina فراتر از انتظار ما بود. تیم پشتیبانی آن‌ها نیز فوق‌العاده است."</p>
+            </blockquote>
+            <cite class="mt-6 block text-lg font-semibold not-italic">- شرکت صنایع شیمیایی پیشرو</cite>
         </div>
     </div>
 </div>
 
-<!-- 5. Latest Articles Section -->
 {% if latest_articles %}
-<div class="bg-white py-16">
+<div class="bg-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
+        <div class="text-center" data-aos="fade-up">
             <h2 class="text-3xl font-extrabold text-gray-900">از وبلاگ ما بخوانید</h2>
-            <p class="mt-4 text-lg text-gray-500">آخرین مقالات و تحلیل‌های تخصصی در صنعت میکس.</p>
+            <p class="mt-4 text-lg text-gray-600">آخرین مقالات و تحلیل‌های تخصصی در صنعت میکس.</p>
         </div>
         <div class="mt-12 max-w-lg mx-auto grid gap-8 lg:grid-cols-3 lg:max-w-none">
             {% for article in latest_articles %}
-            <div class="flex flex-col rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+            <div class="flex flex-col rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
                 <a href="{% url 'blog:article_detail' article.slug %}">
-                    <div class="flex-shrink-0 h-48 bg-gray-200">
-                        <img class="h-full w-full object-cover" src="{% if article.image %}{{ article.image.url }}{% else %}https://placehold.co/400x200/e2e8f0/333?text=No+Image{% endif %}" alt="{{ article.title }}">
+                    <div class="flex-shrink-0 h-48 bg-gray-200 overflow-hidden">
+                        <img class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" src="{% if article.image %}{{ article.image.url }}{% else %}https://placehold.co/400x200/e2e8f0/333?text=No+Image{% endif %}" alt="{{ article.title }}">
                     </div>
                     <div class="flex-1 bg-white p-6 flex flex-col justify-between">
                         <div class="flex-1">

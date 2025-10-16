@@ -23,8 +23,9 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, db_index=True)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=0) # Changed to 0 decimal places for Toman
+    price = models.DecimalField(max_digits=10, decimal_places=0)
     available = models.BooleanField(default=True)
+    contact_for_price = models.BooleanField(default=False, verbose_name="تماس برای قیمت")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -35,9 +36,10 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    # The method name has been corrected from get_absolute_url__ to get_absolute_url
     def get_absolute_url(self):
         """
-        این متد آدرس صحیح برای صفحه جزئیات محصول را برمی‌گرداند.
+        Returns the absolute URL for a single product detail page.
         """
         return reverse('shop:product_detail', args=[self.slug])
 

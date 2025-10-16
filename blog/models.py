@@ -9,8 +9,8 @@ class PublishedManager(models.Manager):
 
 class Article(models.Model):
     STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
+        ('draft', 'پیش‌نویس'),
+        ('published', 'منتشر شده'),
     )
     title = models.CharField(max_length=250, verbose_name="عنوان")
     slug = models.SlugField(max_length=250, unique_for_date='publish', verbose_name="اسلاگ (آدرس)")

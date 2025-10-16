@@ -4,7 +4,7 @@ from .models import Category, Product
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """
-    کلاس مدیریت برای مدل Category در پنل ادمین.
+    Admin class for the Category model.
     """
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
@@ -13,12 +13,12 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     """
-    کلاس مدیریت برای مدل Product در پنل ادمین.
+    Admin class for the Product model.
     """
-    list_display = ['name', 'slug', 'category', 'price', 'available', 'created']
-    list_filter = ['available', 'created', 'updated', 'category']
-    list_editable = ['price', 'available']
+    # Added 'contact_for_price' to display and editing fields
+    list_display = ['name', 'slug', 'category', 'price', 'available', 'contact_for_price', 'created']
+    list_filter = ['available', 'created', 'updated', 'category', 'contact_for_price']
+    list_editable = ['price', 'available', 'contact_for_price']
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name', 'description']
-    list_per_page = 20 # تعداد آیتم‌ها در هر صفحه
-
+    list_per_page = 20

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}پروفایل کاربری{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-12">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-2">سلام، {{ user.username }}!</h1>
+            <p class="text-lg text-gray-600">به پنل کاربری خود خوش آمدید.</p>
+        </div>
+
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">تاریخچه سفارشات</h2>
+            {% if orders %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-right">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-4 font-semibold text-gray-600">شماره سفارش</th>
+                            <th class="p-4 font-semibold text-gray-600">تاریخ</th>
+                            <th class="p-4 font-semibold text-gray-600">مبلغ کل</th>
+                            <th class="p-4 font-semibold text-gray-600">وضعیت پرداخت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr class="border-b hover:bg-gray-50 transition-colors">
+                            <td class="p-4">#{{ order.id }}</td>
+                            <td class="p-4" dir="ltr">{{ order.created|date:"Y/m/d H:i" }}</td>
+                            <td class="p-4 font-medium text-gray-800">{{ order.get_total_cost|floatformat:"0" }} تومان</td>
+                            <td class="p-4">
+                                {% if order.paid %}
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">پرداخت شده</span>
+                                {% else %}
+                                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">در انتظار پرداخت</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center text-gray-500 py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h3 class="mt-2 text-lg font-medium text-gray-900">سبد خرید شما خالی است</h3>
+                <p class="mt-1 text-sm text-gray-500">شما تاکنون هیچ سفارشی ثبت نکرده‌اید.</p>
+                <div class="mt-6">
+                    <a href="{% url 'shop:product_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        مشاهده محصولات
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
